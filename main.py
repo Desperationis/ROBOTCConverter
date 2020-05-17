@@ -3,9 +3,10 @@ from LibraryConverter import *
 from MainConverter import *
 
 """
-    Converts ROBOT C files to compatible ones.
-"""
+    main.py
 
+    Converts ROBOT C files to RobotCSimulator compatible ones.
+"""
 
 CLibrary = LibraryConverter("CLibraryRAW.c", "CLibrary.h")
 includes = [
