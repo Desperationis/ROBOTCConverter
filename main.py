@@ -18,7 +18,6 @@ MainFile = MainConverter("mainRAW.c", "Program.h")
 includes = [
     "#include \"../ROBOTCtoC++/RobotC.h\"\n",
     "#include \"CLibrary.h\"\n\n"
-
 ]
 MainFile.Convert(includes)
 

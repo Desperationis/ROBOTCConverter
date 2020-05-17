@@ -1,21 +1,28 @@
 import os
+from Converter import *
 
-class MainConverter:
-    def __init__(self, rawFile, outputFile):
-        self.rawFileName = rawFile
-        self.rawOutputName = outputFile
-        self.rawFile = open(rawFile, "r")
-        self.outputFile = open(outputFile, "w+")
+"""
+    MainConverter.py
 
-    def RefreshRead(self):
-        self.rawFile.close()
-        self.rawFile = open(self.rawFileName, "r")
+    Converts a RobotC file using main conversion.
+
+    You should use this conversion if:
+        File has task main
+        Uses #pragma config to set up motors
+
+    Main files are basically the file that runs the program and includes
+    any external libraries.
+"""
+class MainConverter(Converter):
+    def __init__(self, rawFileName, outputFileName):
+        super().__init__(rawFileName, outputFileName)
 
     def Convert(self, includeStatements):
-        self.ConvertImportStatements(includeStatements)
-        self.ConvertPragmaStatements()
-        self.ConvertMainFunction()
-        self.ConvertRest()
+        if self.canConvert:
+            self.ConvertImportStatements(includeStatements)
+            self.ConvertPragmaStatements()
+            self.ConvertMainFunction()
+            self.ConvertRest()
 
     def ConvertImportStatements(self, includeStatements):
         self.RefreshRead()
