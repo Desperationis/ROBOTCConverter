@@ -19,46 +19,40 @@ class MainConverter(Converter):
 
     def Convert(self, includeStatements):
         if self.canConvert:
-            self.ConvertImportStatements(includeStatements)
+            self.ImportIncludeStatements(includeStatements)
             self.ConvertPragmaStatements()
+            self.WriteDownFunctions()
             self.ConvertMainFunction()
             self.ConvertRest()
 
-    def ConvertImportStatements(self, includeStatements):
-        self.RefreshRead()
-        self.outputFile.write("#pragma once\n")
-        for line in includeStatements:
-            self.outputFile.write(line)
-        self.outputFile.write("\n\n")
-
+    """
+    Converts compiler-specific pragma statements into my own functions from RobotCSimulator 
+    https://github.com/Desperationis/RobotCSimulator
+    """
     def ConvertPragmaStatements(self):
-        # Converts compiler-exclusive pragma statements into my own functions.
-
         pragmas = []
 
         # Search for pragmas
         self.RefreshRead()
         for line in self.rawFile.readlines():
 
-            if line.find("#pragma") != -1:
-
+            if "pragma" in line:
+                line = line.strip("()\n\t")
                 for i in range(10):
-                    # strip garbage completely
+                    # Normalize long empty spaces.
                     line = line.replace("  ", " ")
-                    line = line.replace("(", "")
-                    line = line.replace(")", "")
-                    line = line.strip()
                 args = line.split(", ")
 
-                if line.find("Motor") != -1:
+                if "Motor" in line:
                     args[0] = "Motor"
                     pragmas.append(args)
 
-        # Write em down
+        # Write down variables of ports.
         for args in pragmas:
             variableString = "MotorPort {0};\n"
             self.outputFile.write(variableString.format(args[2]))
 
+        # Write down SetUp() function.
         self.outputFile.write("void SetUp() {\n")
         for args in pragmas:
             isReversed = "false"
@@ -69,6 +63,12 @@ class MainConverter(Converter):
             self.outputFile.write(funcString.format(args[2], args[2], args[1], isReversed))
         self.outputFile.write("}\n\n")
 
+    """
+        Renames main function into programMain(). This is done so my program doesn't get confused
+        as to which main() to use.
+        
+        
+    """
     def ConvertMainFunction(self):
         self.RefreshRead()
         for line in self.rawFile.readlines():
@@ -76,10 +76,22 @@ class MainConverter(Converter):
                 self.outputFile.write("task programMain() {\n")
                 break
 
+    """
+        This writes down any instantiations of functions writen before the main function.
+    """
+    def WriteDownFunctions(self):
+        self.RefreshRead()
+        for line in self.rawFile.readlines():
+            if "main" in line:
+                break
+
             elif "task" in line or "void" in line or "int" in line or "bool" in line or "float" in line or "double" in line:
                 self.outputFile.write(line)
 
 
+    """ 
+        Writes down the rest of the file after the main function.
+    """
     def ConvertRest(self):
         canWrite = False
 

@@ -17,14 +17,8 @@ class LibraryConverter(Converter):
         super().__init__(rawFileName, outputFileName)
 
     def Convert(self, includeStatements):
-        # Includes include statements.
-        if self.canConvert:
-            self.outputFile.write("#pragma once\n")
+        self.ImportIncludeStatements(includeStatements)
 
-            for line in includeStatements:
-                self.outputFile.write(line)
-
-            self.outputFile.write("\n\n")
-
-            for line in self.rawFile:
-                self.outputFile.write(line)
+        # Copy paste the entire file.
+        for line in self.rawFile:
+            self.outputFile.write(line)

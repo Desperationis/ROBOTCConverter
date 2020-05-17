@@ -28,5 +28,15 @@ class Converter:
             self.rawFile.close()
             self.rawFile = self.OpenFile(self.rawFileName, "r")
 
+    # Converts a file.
     def Convert(self, includeStatements):
         pass
+
+    # Imports include statements into writer file.
+    def ImportIncludeStatements(self, includeStatements):
+        if self.canConvert:
+            for line in includeStatements:
+                self.outputFile.write(line)
+
+            self.outputFile.write("\n\n")
+

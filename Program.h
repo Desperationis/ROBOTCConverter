@@ -1,4 +1,3 @@
-#pragma once
 #include "../ROBOTCtoC++/RobotC.h"
 #include "CLibrary.h"
 

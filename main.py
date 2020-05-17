@@ -9,6 +9,7 @@ from MainConverter import *
 
 CLibrary = LibraryConverter("CLibraryRAW.c", "CLibrary.h")
 includes = [
+    "#pragma once\n"
     "#include \"../ROBOTCtoC++/RobotC.h\"\n"
 ]
 CLibrary.Convert(includes)
