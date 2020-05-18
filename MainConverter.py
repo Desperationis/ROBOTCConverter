@@ -47,20 +47,34 @@ class MainConverter(Converter):
                     args[0] = "Motor"
                     pragmas.append(args)
 
+                if "Sensor" in line:
+                    args[0] = "Sensor"
+                    pragmas.append(args)
+
         # Write down variables of ports.
         for args in pragmas:
-            variableString = "MotorPort {0};\n"
-            self.outputFile.write(variableString.format(args[2]))
+            print (args[0])
+            if args[0] == "Motor":
+                variableString = "MotorPort {0};\n"
+                self.outputFile.write(variableString.format(args[2]))
+            elif args[0] == "Sensor":
+                variableString = "SensorPort {0};\n"
+                self.outputFile.write(variableString.format(args[2]))
 
         # Write down SetUp() function.
         self.outputFile.write("void SetUp() {\n")
         for args in pragmas:
-            isReversed = "false"
-            if "reversed" in args:
-                isReversed = "true"
+            if args[0] == "Motor":
+                isReversed = "false"
+                if "reversed" in args:
+                    isReversed = "true"
 
-            funcString = "\tconfig(\"{0}\", {1}, {2}, {3});\n"
-            self.outputFile.write(funcString.format(args[2], args[2], args[1], isReversed))
+                funcString = "\tconfig(\"{0}\", {1}, {2}, {3});\n"
+                self.outputFile.write(funcString.format(args[2], args[2], args[1], isReversed))
+
+            if args[0] == "Sensor":
+                funcString = "\tconfig(\"{0}\", {1}, {2});\n"
+                self.outputFile.write(funcString.format(args[2], args[2], args[1]))
         self.outputFile.write("}\n\n")
 
     """

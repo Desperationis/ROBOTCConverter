@@ -1,0 +1,2 @@
+C:\Users\smart\Desktop\RobotCLibrary
+C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
