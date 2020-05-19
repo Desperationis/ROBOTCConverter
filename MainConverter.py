@@ -53,7 +53,6 @@ class MainConverter(Converter):
 
         # Write down variables of ports.
         for args in pragmas:
-            print (args[0])
             if args[0] == "Motor":
                 variableString = "MotorPort {0};\n"
                 self.outputFile.write(variableString.format(args[2]))

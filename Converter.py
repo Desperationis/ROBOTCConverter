@@ -38,5 +38,5 @@ class Converter:
             for line in includeStatements:
                 self.outputFile.write(line)
 
-            self.outputFile.write("\n\n")
+            self.outputFile.write("\n")
 

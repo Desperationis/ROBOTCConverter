@@ -21,4 +21,5 @@ class LibraryConverter(Converter):
 
         # Copy paste the entire file.
         for line in self.rawFile:
-            self.outputFile.write(line)
+            if "#include" not in line and "#pragma" not in line:
+                self.outputFile.write(line)
