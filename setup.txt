@@ -1,6 +1,6 @@
-> Input / Output Folders C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
+> Input / Output Folders
 C:\Users\smart\Desktop\RobotCLibrary
-C:\Users\smart\Desktop\
+C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
 
 > Main File
 main.c
