@@ -1,2 +1,28 @@
+> Input / Output Folders C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
 C:\Users\smart\Desktop\RobotCLibrary
-C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
+C:\Users\smart\Desktop\
+
+> Main File
+main.c
+Program.h
+#include "../ROBOTCtoC++/RobotC.h"
+#include "CLibrary.h"
+#include <iostream>
+*end
+
+> Library File
+CLibrary.h
+CLibraryDeclarations.h
+#pragma once
+#include "../ROBOTCtoC++/RobotC.h"
+#include <iostream>
+*end
+
+> Library File
+CLibrary.c
+CLibrary.h
+#pragma once
+#include "../ROBOTCtoC++/RobotC.h"
+#include "CLibraryDeclarations.h"
+#include <iostream>
+*end
