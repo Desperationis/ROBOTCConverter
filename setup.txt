@@ -13,42 +13,46 @@ Program.h
 *end
 
 > Header File
+Controllers/Controllers.h
 Controllers.h
-Controllers.h
+#include "Globals.h"
 *end
 
 > Header File
-Globals.h
+Globals/Globals.h
 Globals.h
 *end
 
 > Header File
-Helpers.h
+Helpers/Helpers.h
 Helpers.h
 *end
 
 > Source File
-Controllers.c
+Controllers/Controllers.c
 Controllers.cpp
 #include "../ROBOTCtoC++/RobotC.h"
 #include "Controllers.h"
 #include "Globals.h"
 #include "Helpers.h"
+#include <iostream>
 *end
 
 > Source File
-Globals.c
+Globals/Globals.c
 Globals.cpp
 #include "../ROBOTCtoC++/RobotC.h"
 #include "Globals.h"
+#include <iostream>
 *end
 
 > Source File
-Helpers.c
+Helpers/Helpers.c
 Helpers.cpp
 #include "../ROBOTCtoC++/RobotC.h"
 #include "Globals.h"
 #include "Helpers.h"
+#include <iostream>
 *end
 
 
