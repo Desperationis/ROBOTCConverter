@@ -9,6 +9,7 @@ Program.h
 #include "Controllers.h"
 #include "Globals.h"
 #include "Helpers.h"
+#include "Slew.h"
 #include <iostream>
 *end
 
@@ -28,6 +29,11 @@ Helpers/Helpers.h
 Helpers.h
 *end
 
+> Header File
+Controllers/Slew/Slew.h
+Slew.h
+*end
+
 > Source File
 Controllers/Controllers.c
 Controllers.cpp
@@ -35,6 +41,7 @@ Controllers.cpp
 #include "Controllers.h"
 #include "Globals.h"
 #include "Helpers.h"
+#include "Slew.h"
 #include <iostream>
 *end
 
@@ -54,6 +61,17 @@ Helpers.cpp
 #include "Helpers.h"
 #include <iostream>
 *end
+
+> Source File
+Controllers/Slew/Slew.c
+Slew.cpp
+#include "../ROBOTCtoC++/RobotC.h"
+#include "Slew.h"
+#include "Helpers.h"
+#include "Globals.h"
+#include <iostream>
+*end
+
 
 
 
