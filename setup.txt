@@ -45,6 +45,7 @@ Slew.h
 Controllers/PID/PID.h
 PID.h
 #include "../ROBOTCtoC++/RobotC.h"
+#include "Globals.h"
 *end
 
 > Source File
