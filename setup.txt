@@ -11,7 +11,13 @@ Program.h
 #include "Helpers.h"
 #include "Slew.h"
 #include "PID.h"
+#include "Setup.h"
 #include <iostream>
+*end
+
+> Header File
+Setup/Setup.h
+Setup.h
 *end
 
 > Header File
@@ -38,6 +44,7 @@ Slew.h
 > Header File
 Controllers/PID/PID.h
 PID.h
+#include "../ROBOTCtoC++/RobotC.h"
 *end
 
 > Source File
@@ -87,6 +94,14 @@ PID.cpp
 #include "Globals.h"
 #include "Slew.h"
 #include <iostream>
+*end
+
+> Source File
+Setup/Setup.c
+Setup.cpp
+#include "PID.h"
+#include "Slew.h"
+#include "Helpers.h"
 *end
 
 
