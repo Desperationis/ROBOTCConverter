@@ -16,6 +16,11 @@ class LibraryConverter(Converter):
     def __init__(self, fileName, outputFileName):
         super().__init__(fileName, outputFileName)
 
+        self.blacklist = [
+            "#include",
+            "#pragma"
+        ]
+
     def Convert(self, includeStatements):
         self.RefreshRead()
 
@@ -26,7 +31,13 @@ class LibraryConverter(Converter):
         currentLine = self.GetCurrentLine()
         while not self.ReachedEnd():
 
-            if "#include" not in currentLine and "#pragma" not in currentLine:
-                self.outputFile.write(currentLine)
+            skip = False
+            for item in self.blacklist:
+                if item in currentLine:
+                    skip = True
+                    break
+
+            if not skip:
+                self.outputFile.write(currentLine + "\n")
 
             currentLine = self.GetNextLine()
