@@ -13,13 +13,20 @@ from Converter import *
     RobotC libraries are basically included .c files with no main function.
 """
 class LibraryConverter(Converter):
-    def __init__(self, rawFileName, outputFileName):
-        super().__init__(rawFileName, outputFileName)
+    def __init__(self, fileName, outputFileName):
+        super().__init__(fileName, outputFileName)
 
     def Convert(self, includeStatements):
+        self.RefreshRead()
+
+        # Include import statements
         self.ImportIncludeStatements(includeStatements)
 
         # Copy paste the entire file.
-        for line in self.rawFile:
-            if "#include" not in line and "#pragma" not in line:
-                self.outputFile.write(line)
+        currentLine = self.GetCurrentLine()
+        while not self.ReachedEnd():
+
+            if "#include" not in currentLine and "#pragma" not in currentLine:
+                self.outputFile.write(currentLine)
+
+            currentLine = self.GetNextLine()
