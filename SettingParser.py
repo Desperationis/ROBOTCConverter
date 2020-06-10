@@ -9,62 +9,77 @@ class SettingParser(Reader):
 
         self.sourceFolder = "SourceFolderNotSet"
         self.destinationFolder = "DestinationFolderNotSet"
-        self.converters = []
 
     # Parses the file. This is where the magic happens
     def ParseFile(self):
         if self.canParse:
-            currentLine = self.GetCurrentLine()
+            self.ResetReader()
 
-            while not self.ReachedEnd():
+            for line in self.CleanRead():
+                currentLine = line.strip()
+
                 # '>' indicates the start of a setting
-                if '>' in currentLine:
+                if '> ' in currentLine:
                     self.currentSetting += 1
-                    currentLine = self.GetNextLine()
+                    self.SkipLine()
 
                 if self.currentSetting == 1:
                     self.GetFolders()
+                    pass
 
                 if self.currentSetting == 2:
-                    self.GetMain()
+                    #self.GetMain()
+                    self.ToNextSetting()
+                    pass
 
                 if self.currentSetting > 2:
                     self.GetLibrary()
-
-                # Proceed to the next line
-                currentLine = self.GetNextLine()
+                    pass
 
 
         else:
             print ("%s could not be parsed as it doesn't exist." % self.fileName)
 
+    def ToNextSetting(self):
+        while not self.ReachedEnd():
+            currentLine = self.GetCurrentLine()
+            if '> ' in currentLine:
+                self.SkipLine(-1)
+                break
+            else:
+                self.SkipLine()
+
     def GetFolders(self):
-        self.sourceFolder = self.GetCurrentLine()
-        self.destinationFolder = self.GetNextLine()
+        self.sourceFolder = self.GetCurrentLine().strip()
+        self.destinationFolder = self.GetNextLine().strip()
+
+        self.ToNextSetting()
 
     def GetMain(self):
         fileName = self.GetCurrentLine()
         convertedName = self.GetNextLine()
 
         includes = []
-        line = self.GetNextLine()
-        while '*' not in self.GetCurrentLine():
-            includes.append(line + "\n")
-            line = self.GetNextLine()
+        for line in self.CleanRead():
+            if '*' not in line:
+                includes.append(line)
 
         MainFile = MainConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder,convertedName))
         MainFile.Convert(includes)
 
     def GetLibrary(self):
-        fileName = self.GetCurrentLine()
-        convertedName = self.GetNextLine()
+        if not self.ReachedEnd():
+            fileName = self.GetCurrentLine().strip().replace('/', '\\')
+            convertedName = self.GetNextLine().strip().replace('/', '\\')
 
-        includes = []
-        line = self.GetNextLine()
-        while '*' not in self.GetCurrentLine():
-            includes.append(line + "\n")
-            line = self.GetNextLine()
+            includes = []
+            while not self.ReachedEnd():
+                line = self.GetNextLine()
+                if '*' not in line:
+                    includes.append(line)
+                else:
+                    break
 
-
-        libraryFile = LibraryConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder,convertedName))
-        libraryFile.Convert(includes)
+            self.ToNextSetting()
+            libraryFile = LibraryConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder, convertedName))
+            libraryFile.Convert(includes)

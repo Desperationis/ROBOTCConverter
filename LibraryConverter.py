@@ -22,22 +22,23 @@ class LibraryConverter(Converter):
         ]
 
     def Convert(self, includeStatements):
-        self.RefreshRead()
+        if self.canConvert:
+            self.RefreshRead()
 
-        # Include import statements
-        self.ImportIncludeStatements(includeStatements)
+            # Include import statements
+            self.ImportIncludeStatements(includeStatements)
 
-        # Copy paste the entire file.
-        currentLine = self.GetCurrentLine()
-        while not self.ReachedEnd():
 
-            skip = False
-            for item in self.blacklist:
-                if item in currentLine:
-                    skip = True
-                    break
+            self.ResetReader()
+            # Copy paste the entire file.
+            for line in self.CleanRead():
+                skip = False
+                for item in self.blacklist:
+                    if item in line:
+                        skip = True
+                        break
 
-            if not skip:
-                self.outputFile.write(currentLine + "\n")
-
-            currentLine = self.GetNextLine()
+                if not skip:
+                    self.outputFile.write(line)
+        else:
+            print("Library Conversion could not happen; File not opened.")

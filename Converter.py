@@ -13,7 +13,7 @@ class Converter(Reader):
         self.outputFileName = outputFileName
         self.outputFile = OpenFileSafely(outputFileName, "w+", True)
 
-        self.canConvert = OneIs((self.file, self.outputFile), None)
+        self.canConvert = not OneIs((self.file, self.outputFile), None)
 
     # "Refreshes" read file for reuse.
     def RefreshRead(self):
