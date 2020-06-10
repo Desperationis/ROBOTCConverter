@@ -1,4 +1,4 @@
-import os
+from PythonFileLibrary.HelperFunctions import *
 from Converter import *
 
 """
@@ -10,50 +10,50 @@ class MainConverter(Converter):
     def __init__(self, fileName, outputFileName):
         super().__init__(fileName, outputFileName)
 
+        self.continueAt = 0
+
+        self.blacklist = [
+            "#",
+            "(",
+            ")",
+            "\n",
+            "\t",
+            "pragma",
+            "config",
+            " "
+        ]
+
     def Convert(self, includeStatements):
         if self.canConvert:
             self.ImportIncludeStatements(includeStatements)
-
             self.ConvertPragmaStatements()
-            self.WriteDownFunctions()
-            self.ConvertMainFunction()
             self.ConvertRest()
 
-    # Converts compiler-specific pragma statements into my own functions from RobotCSimulator
+    # Converts compiler-specific #pragma statements into my own functions from RobotCSimulator
     # https://github.com/Desperationis/RobotCSimulator
     def ConvertPragmaStatements(self):
         pragmas = []
 
         # Search for pragmas
         self.RefreshRead()
-        currentLine = self.GetCurrentLine()
-        while not self.ReachedEnd():
-
-            if "pragma" in currentLine:
-                currentLine = currentLine.strip("()\n\t")
-                for i in range(10):
-                    # Normalize long empty spaces.
-                    currentLine = currentLine.replace("  ", " ")
-                args = currentLine.split(", ")
-
-                if "Motor" in currentLine:
-                    args[0] = "Motor"
+        for line in self.CleanRead():
+            if "pragma" in line:
+                if "config" in line:
+                    # Get arguments from #pragma config
+                    line = RemoveElements(self.blacklist, line)
+                    args = line.split(",")
                     pragmas.append(args)
 
-                if "Sensor" in currentLine:
-                    args[0] = "Sensor"
-                    pragmas.append(args)
+            # Marks the spot where pragmas end.
+            elif "// start" in line:
+                self.continueAt = self.currentLine
+                break
 
-            currentLine = self.GetNextLine()
-
-        # Write down variables of ports.
+        # Write down variables of ports; SensorPort && MotorPort
         for args in pragmas:
-            if args[0] == "Motor":
-                variableString = "MotorPort {0};\n"
-                self.outputFile.write(variableString.format(args[2]))
-            elif args[0] == "Sensor":
-                variableString = "SensorPort {0};\n"
-                self.outputFile.write(variableString.format(args[2]))
+            variable = "{0}Port {1};".format(args[0], args[2])
+            self.outputFile.write(variable + "\n")
+
 
         # Write down SetUp() function.
         self.outputFile.write("void SetUp() {\n")
@@ -71,41 +71,14 @@ class MainConverter(Converter):
                 self.outputFile.write(funcString.format(args[2], args[2], args[1]))
         self.outputFile.write("}\n\n")
 
-    # Renames main function into programMain(). This is done so my program doesn't get confused
-    # as to which main() to use.
-    def ConvertMainFunction(self):
-        self.RefreshRead()
-
-        currentLine = self.GetCurrentLine()
-        while not self.ReachedEnd():
-            if currentLine.find("main()") != -1:
-                self.outputFile.write("task programMain() {\n")
-                break
-            currentLine = self.GetNextLine()
-
-    # This writes down any instantiations of functions writen before the main function.
-    def WriteDownFunctions(self):
-        self.RefreshRead()
-        currentLine = self.GetCurrentLine()
-        while not self.ReachedEnd():
-            line = currentLine
-            if "main" in line:
-                break
-
-            elif "task" in line or "void" in line or "int" in line or "bool" in line or "float" in line or "double" in line:
-                self.outputFile.write(line)
-            currentLine = self.GetNextLine()
-
-    # Writes down the rest of the file after the main function.
+    # Writes down the rest of the file. main() will also be replaced by
+    # programMain().
     def ConvertRest(self):
-        canWrite = False
 
         self.RefreshRead()
-        currentLine = self.GetCurrentLine()
-        while not self.ReachedEnd():
-            if canWrite:
-                self.outputFile.write(currentLine)
+        self.SkipLine(self.continueAt)
+        for line in self.CleanRead():
+            if "main()" in line:
+                line = line.replace("main()", "programMain()")
 
-            if currentLine.find("main()") != -1:
-                canWrite = True
-            currentLine = self.GetNextLine()
+            self.outputFile.write(line)
