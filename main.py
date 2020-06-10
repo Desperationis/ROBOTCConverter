@@ -1,7 +1,4 @@
-import os
-from LibraryConverter import *
-from MainConverter import *
-from Parser import *
+from SettingParser import *
 
 """
     main.py
@@ -9,8 +6,7 @@ from Parser import *
     Converts ROBOT C files to RobotCSimulator compatible ones.
 """
 
-
-parser = Parser()
+parser = SettingParser("setup.txt")
 parser.ParseFile()
 
 
