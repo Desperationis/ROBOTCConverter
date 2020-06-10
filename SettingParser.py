@@ -25,19 +25,20 @@ class SettingParser(Reader):
 
                 if self.currentSetting == 1:
                     self.GetFolders()
+                    self.ToNextSetting()
 
                 if self.currentSetting == 2:
-                    self.GetMain()
+                    self.ConvertFile(MainConverter)
                     self.ToNextSetting()
 
                 if self.currentSetting > 2:
-                    self.GetLibrary()
-
-
+                    self.ConvertFile(LibraryConverter)
+                    self.ToNextSetting()
         else:
             print ("%s could not be parsed as it doesn't exist." % self.fileName)
 
     def ToNextSetting(self):
+        # Move the cursor 1 line before the next setting
         while not self.ReachedEnd():
             currentLine = self.GetCurrentLine()
             if '> ' in currentLine:
@@ -50,37 +51,18 @@ class SettingParser(Reader):
         self.sourceFolder = self.GetCurrentLine().strip()
         self.destinationFolder = self.GetNextLine().strip()
 
-        self.ToNextSetting()
+    def ConvertFile(self, Converter):
+        fileName = self.GetCurrentLine().strip().replace('/', '\\')
+        convertedName = self.GetNextLine().strip().replace('/', '\\')
 
-    def GetMain(self):
-        if not self.ReachedEnd():
-            fileName = self.GetCurrentLine().strip().replace('/', '\\')
-            convertedName = self.GetNextLine().strip().replace('/', '\\')
+        includes = []
+        while not self.ReachedEnd():
+            line = self.GetNextLine()
+            if '*' not in line:
+                includes.append(line)
+            else:
+                break
 
-            includes = []
-            while not self.ReachedEnd():
-                line = self.GetNextLine()
-                if '*' not in line:
-                    includes.append(line)
-                else:
-                    break
+        converter = Converter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder, convertedName))
 
-            MainFile = MainConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder,convertedName))
-            MainFile.Convert(includes)
-
-    def GetLibrary(self):
-        if not self.ReachedEnd():
-            fileName = self.GetCurrentLine().strip().replace('/', '\\')
-            convertedName = self.GetNextLine().strip().replace('/', '\\')
-
-            includes = []
-            while not self.ReachedEnd():
-                line = self.GetNextLine()
-                if '*' not in line:
-                    includes.append(line)
-                else:
-                    break
-
-            self.ToNextSetting()
-            libraryFile = LibraryConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder, convertedName))
-            libraryFile.Convert(includes)
+        converter.Convert(includes)

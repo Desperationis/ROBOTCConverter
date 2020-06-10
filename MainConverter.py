@@ -4,18 +4,11 @@ from Converter import *
 """
     MainConverter.py
 
-    Converts a RobotC file using main conversion.
-
-    You should use this conversion if:
-        File has task main
-        Uses #pragma config to set up motors
-
-    Main files are basically the file that runs the program and includes
-    any external libraries.
+    Converts the main file. (The file that runs the program)
 """
 class MainConverter(Converter):
-    def __init__(self, rawFileName, outputFileName):
-        super().__init__(rawFileName, outputFileName)
+    def __init__(self, fileName, outputFileName):
+        super().__init__(fileName, outputFileName)
 
     def Convert(self, includeStatements):
         if self.canConvert:
@@ -26,10 +19,8 @@ class MainConverter(Converter):
             self.ConvertMainFunction()
             self.ConvertRest()
 
-    """
-    Converts compiler-specific pragma statements into my own functions from RobotCSimulator 
-    https://github.com/Desperationis/RobotCSimulator
-    """
+    # Converts compiler-specific pragma statements into my own functions from RobotCSimulator
+    # https://github.com/Desperationis/RobotCSimulator
     def ConvertPragmaStatements(self):
         pragmas = []
 
@@ -80,12 +71,8 @@ class MainConverter(Converter):
                 self.outputFile.write(funcString.format(args[2], args[2], args[1]))
         self.outputFile.write("}\n\n")
 
-    """
-        Renames main function into programMain(). This is done so my program doesn't get confused
-        as to which main() to use.
-        
-        
-    """
+    # Renames main function into programMain(). This is done so my program doesn't get confused
+    # as to which main() to use.
     def ConvertMainFunction(self):
         self.RefreshRead()
 
@@ -96,9 +83,7 @@ class MainConverter(Converter):
                 break
             currentLine = self.GetNextLine()
 
-    """
-        This writes down any instantiations of functions writen before the main function.
-    """
+    # This writes down any instantiations of functions writen before the main function.
     def WriteDownFunctions(self):
         self.RefreshRead()
         currentLine = self.GetCurrentLine()
@@ -111,10 +96,7 @@ class MainConverter(Converter):
                 self.outputFile.write(line)
             currentLine = self.GetNextLine()
 
-
-    """ 
-        Writes down the rest of the file after the main function.
-    """
+    # Writes down the rest of the file after the main function.
     def ConvertRest(self):
         canWrite = False
 
