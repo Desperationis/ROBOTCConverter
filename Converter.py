@@ -1,4 +1,5 @@
-from Reader import *
+from PythonFileLibrary.Reader import *
+from PythonFileLibrary.HelperFunctions import *
 
 """
     Converter.py
@@ -12,7 +13,7 @@ class Converter(Reader):
         self.outputFileName = outputFileName
         self.outputFile = OpenFileSafely(outputFileName, "w+", True)
 
-        self.canConvert = True
+        self.canConvert = OneIs((self.file, self.outputFile), None)
 
     # "Refreshes" read file for reuse.
     def RefreshRead(self):
