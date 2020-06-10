@@ -25,16 +25,13 @@ class SettingParser(Reader):
 
                 if self.currentSetting == 1:
                     self.GetFolders()
-                    pass
 
                 if self.currentSetting == 2:
-                    #self.GetMain()
+                    self.GetMain()
                     self.ToNextSetting()
-                    pass
 
                 if self.currentSetting > 2:
                     self.GetLibrary()
-                    pass
 
 
         else:
@@ -56,16 +53,20 @@ class SettingParser(Reader):
         self.ToNextSetting()
 
     def GetMain(self):
-        fileName = self.GetCurrentLine()
-        convertedName = self.GetNextLine()
+        if not self.ReachedEnd():
+            fileName = self.GetCurrentLine().strip().replace('/', '\\')
+            convertedName = self.GetNextLine().strip().replace('/', '\\')
 
-        includes = []
-        for line in self.CleanRead():
-            if '*' not in line:
-                includes.append(line)
+            includes = []
+            while not self.ReachedEnd():
+                line = self.GetNextLine()
+                if '*' not in line:
+                    includes.append(line)
+                else:
+                    break
 
-        MainFile = MainConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder,convertedName))
-        MainFile.Convert(includes)
+            MainFile = MainConverter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder,convertedName))
+            MainFile.Convert(includes)
 
     def GetLibrary(self):
         if not self.ReachedEnd():

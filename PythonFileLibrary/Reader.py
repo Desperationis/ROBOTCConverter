@@ -15,6 +15,7 @@ class Reader:
             self.lines = self.file.readlines()
             self.currentLine = 0
 
+    # Resets the reader's cursor to the top.
     def ResetReader(self):
         if self.canParse:
             self.currentLine = 0
@@ -29,6 +30,7 @@ class Reader:
             return self.lines[self.currentLine]
         return "Can't get line; File not opened."
 
+    # View the next line without commiting.
     def PeekNextLine(self):
         nextLine = min(self.currentLine + 1, len(self.lines) - 1)
         return self.lines[nextLine]
@@ -44,6 +46,7 @@ class Reader:
 
         return "Can't get line; File not opened."
 
+    # Yield function that spits out the lines of the file.
     def CleanRead(self):
         # Function that yields the next non-null line
         if self.canParse:
@@ -54,5 +57,6 @@ class Reader:
         else:
             yield "Cannot parse file"
 
+    # Skips a number of lines (negative or positive)
     def SkipLine(self, amount = 1):
         self.currentLine += amount
