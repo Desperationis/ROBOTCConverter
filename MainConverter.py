@@ -12,6 +12,7 @@ class MainConverter(Converter):
 
         self.continueAt = 0
 
+        # Ignores these when parsing pragmas
         self.blacklist = [
             "#",
             "(",
@@ -81,4 +82,6 @@ class MainConverter(Converter):
             if "main()" in line:
                 line = line.replace("main()", "programMain()")
 
-            self.outputFile.write(line)
+            # Absolutely ignores anything with #
+            if "#" not in line:
+                self.outputFile.write(line)

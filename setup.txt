@@ -2,17 +2,20 @@
 C:\Users\smart\Desktop\RobotCLibrary
 C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
 
+> Global Includes
+#include "../ROBOTCtoC++/RobotC.h"
+#include <iostream>
+*end
+
 > Main File
 main.c
 Program.h
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Controllers.h"
 #include "Globals.h"
 #include "Helpers.h"
 #include "Slew.h"
 #include "PID.h"
 #include "Setup.h"
-#include <iostream>
 *end
 
 > Header File
@@ -44,57 +47,46 @@ Slew.h
 > Header File
 Controllers/PID/PID.h
 PID.h
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Globals.h"
 *end
 
 > Source File
 Controllers/Controllers.c
 Controllers.cpp
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Controllers.h"
 #include "Globals.h"
 #include "Helpers.h"
 #include "Slew.h"
-#include <iostream>
 *end
 
 > Source File
 Globals/Globals.c
 Globals.cpp
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Globals.h"
-#include <iostream>
 *end
 
 > Source File
 Helpers/Helpers.c
 Helpers.cpp
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Globals.h"
 #include "Helpers.h"
-#include <iostream>
 *end
 
 > Source File
 Controllers/Slew/Slew.c
 Slew.cpp
-#include "../ROBOTCtoC++/RobotC.h"
 #include "Slew.h"
 #include "Helpers.h"
 #include "Globals.h"
-#include <iostream>
 *end
 
 > Source File
 Controllers/PID/PID.c
 PID.cpp
-#include "../ROBOTCtoC++/RobotC.h"
 #include "PID.h"
 #include "Helpers.h"
 #include "Globals.h"
 #include "Slew.h"
-#include <iostream>
 *end
 
 > Source File

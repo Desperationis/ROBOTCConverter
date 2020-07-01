@@ -16,6 +16,7 @@ class LibraryConverter(Converter):
     def __init__(self, fileName, outputFileName):
         super().__init__(fileName, outputFileName)
 
+        # Ignores these when copying
         self.blacklist = [
             "#include",
             "#pragma"

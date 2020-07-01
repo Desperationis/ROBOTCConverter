@@ -10,6 +10,8 @@ class SettingParser(Reader):
         self.sourceFolder = "SourceFolderNotSet"
         self.destinationFolder = "DestinationFolderNotSet"
 
+        self.globalIncludes = []
+
     # Parses the file. This is where the magic happens
     def ParseFile(self):
         if self.canParse:
@@ -28,10 +30,15 @@ class SettingParser(Reader):
                     self.ToNextSetting()
 
                 if self.currentSetting == 2:
+                    self.SkipLine(-1)
+                    self.globalIncludes = self.GetIncludes()
+                    self.ToNextSetting()
+
+                if self.currentSetting == 3:
                     self.ConvertFile(MainConverter)
                     self.ToNextSetting()
 
-                if self.currentSetting > 2:
+                if self.currentSetting > 4:
                     self.ConvertFile(LibraryConverter)
                     self.ToNextSetting()
         else:
@@ -51,10 +58,7 @@ class SettingParser(Reader):
         self.sourceFolder = self.GetCurrentLine().strip()
         self.destinationFolder = self.GetNextLine().strip()
 
-    def ConvertFile(self, Converter):
-        fileName = self.GetCurrentLine().strip().replace('/', '\\')
-        convertedName = self.GetNextLine().strip().replace('/', '\\')
-
+    def GetIncludes(self):
         includes = []
         while not self.ReachedEnd():
             line = self.GetNextLine()
@@ -62,6 +66,15 @@ class SettingParser(Reader):
                 includes.append(line)
             else:
                 break
+
+        includes.extend(self.globalIncludes)
+        return includes
+
+    def ConvertFile(self, Converter):
+        fileName = self.GetCurrentLine().strip().replace('/', '\\')
+        convertedName = self.GetNextLine().strip().replace('/', '\\')
+
+        includes = self.GetIncludes()
 
         converter = Converter(os.path.join(self.sourceFolder, fileName), os.path.join(self.destinationFolder, convertedName))
 
