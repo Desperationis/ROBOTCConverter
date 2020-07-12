@@ -4,7 +4,9 @@ C:\Users\smart\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
 
 > Global Includes
 #include "../ROBOTCtoC++/RobotC.h"
+#include "../ROBOTCtoC++/Cortex.h"
 #include <iostream>
+#include <cmath>
 *end
 
 > Main File

@@ -64,11 +64,11 @@ class MainConverter(Converter):
                 if "reversed" in args:
                     isReversed = "true"
 
-                funcString = "\tconfig(\"{0}\", {1}, {2}, {3});\n"
+                funcString = "\tCortex::config(\"{0}\", {1}, {2}, {3});\n"
                 self.outputFile.write(funcString.format(args[2], args[2], args[1], isReversed))
 
             if args[0] == "Sensor":
-                funcString = "\tconfig(\"{0}\", {1}, {2});\n"
+                funcString = "\tCortex::config(\"{0}\", {1}, {2});\n"
                 self.outputFile.write(funcString.format(args[2], args[2], args[1]))
         self.outputFile.write("}\n\n")
 
