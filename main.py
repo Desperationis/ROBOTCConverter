@@ -1,2 +1,5 @@
+from SettingParser import *
+from FileConverter import *
 
-print('Hello, world!')
+settingParser = SettingParser()
+fileConverter = FileConverter('main.c')
