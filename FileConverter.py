@@ -27,7 +27,7 @@ class FileConverter(Reader):
         assert self.canParse, "FileConverter.py: Could not read \"%s\"" % (self.fileName)
 
         for pragma in self.GetPragma():
-            pragma = RemoveElements(['#pragma', '(', ')'], pragma)
+            pragma = RemoveElements(pragma, ['#pragma', '(', ')'])
 
             if 'config' in pragma:
                 pragma = pragma.replace('config', "")
