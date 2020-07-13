@@ -81,6 +81,3 @@ class FileConverter(Reader):
         self.currentLine = lastLine + 1
 
         self.convertedFile.extend(self.FilterMain())
-
-        for line in self.convertedFile:
-            print(line.strip('\n'))
