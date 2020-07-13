@@ -6,7 +6,6 @@ from PythonFileLibrary.HelperFunctions import *
 
     Converts a RobotC file into a .cpp file.
 """
-
 class FileConverter(Reader):
     def __init__(self, fileName):
         super().__init__(fileName)
@@ -19,7 +18,7 @@ class FileConverter(Reader):
             print(error)
 
     # Get lines that have '#pragma config' in them. File
-    # can still be naviagted normally.
+    # can still be navigated normally.
     def GetConfig(self):
         for line in self.CleanRead():
             if '#pragma' in line and 'config' in line:
@@ -28,7 +27,6 @@ class FileConverter(Reader):
         self.ResetReader()
 
     def ConvertPragma(self):
-
         arguments = []
 
         # Get config() arguments
@@ -41,21 +39,16 @@ class FileConverter(Reader):
         convertedPragma = []
         # Step 1: Turn motor and sensor ports into variables.
         for arg in arguments:
-            type = arg[0]
-            name = arg[2]
+            type, name = arg[0], arg[2]
             convertedPragma.append("%sPort %s;\n" % (type, name))
 
         #Step 2: Use Cortex::config() to configure the ports.
         convertedPragma.append("void SetUp() {\n")
         for arg in arguments:
-            type = arg[0]
-            name = arg[2]
-            port = arg[1]
+            type, port, name = arg[0], arg[1], arg[2]
 
             if type == "Motor":
-
                 reversed = arg[-1] == 'reversed'
-
                 convertedPragma.append("\tCortex::config(\"%s\", %s, %s, %s);\n" % (name, name, port, reversed))
             else:
                 convertedPragma.append("\tCortex::config(\"%s\", %s, %s);\n" % (name, name, port))
@@ -64,9 +57,30 @@ class FileConverter(Reader):
 
         return convertedPragma
 
+    def FilterMain(self):
+        converted = []
+        for line in self.CleanRead():
+            if 'task' in line and 'main' in line:
+                line = line.replace('main', "programMain")
+
+            converted.append(line)
+
+        self.ResetReader()
+        return converted
 
     def Convert(self):
         assert self.canParse, "FileConverter.py: Could not read \"%s\"" % (self.fileName)
 
-        for i in self.ConvertPragma():
-            print (i)
+        # Convert pragma
+        self.convertedFile.extend(self.ConvertPragma())
+
+        # Skip over pragmas
+        lastLine = -1
+        for line in self.GetConfig():
+            lastLine = self.currentLine
+        self.currentLine = lastLine + 1
+
+        self.convertedFile.extend(self.FilterMain())
+
+        for line in self.convertedFile:
+            print(line.strip('\n'))
