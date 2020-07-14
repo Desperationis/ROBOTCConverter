@@ -40,7 +40,7 @@ class SettingParser(PythonFileLibrary.SettingParser.SettingParser):
                 while not self.ReachedEnd():
                     currentLine = self.GetNextLine()
                     if '*end' not in currentLine:
-                        self.globalIncludes.append(self.GetNextLine())
+                        self.globalIncludes.append(currentLine)
                     else:
                         break
 

@@ -1,4 +1,5 @@
 from SettingParser import *
+from Writer import *
 from FileConverter import *
 from ConfigPlugin import *
 from MainPlugin import *
@@ -9,19 +10,23 @@ from PythonFileLibrary.RecursiveScanner import *
 
 settingParser = SettingParser()
 recursiveScanner = RecursiveScanner(settingParser.inputFolder, ['.c', '.h'])
+writer = Writer(settingParser.outputFolder)
 
-fileConverter = FileConverter('main.c')
-fileConverter.AddPlugin(IncludePlugin)
-fileConverter.AddPlugin(ConfigPlugin)
-fileConverter.AddPlugin(MainPlugin)
-fileConverter.AddPlugin(CopyPlugin)
+for file in recursiveScanner.files:
 
-includePlugin = fileConverter.AccessPlugin(IncludePlugin)
-includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
+    fileConverter = FileConverter(file)
+    fileConverter.AddPlugin(IncludePlugin)
+
+    includePlugin = fileConverter.AccessPlugin(IncludePlugin)
+    includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
 
 
-fileConverter.Convert()
 
-print("/////////////////////////////////////CurrentFile: %s" % fileConverter.fileName)
-for line in fileConverter.convertedFile:
-    print(line.strip('\n'))
+    if 'main.c' in file:
+        fileConverter.AddPlugin(ConfigPlugin)
+        fileConverter.AddPlugin(MainPlugin)
+    fileConverter.AddPlugin(CopyPlugin)
+
+    fileConverter.Convert()
+
+    writer.WriteFile(fileConverter)

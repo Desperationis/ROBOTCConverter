@@ -27,10 +27,9 @@ class IncludePlugin(Plugin):
             # Only get the file name of the directory.
             line = line.split("/")[-1]
 
-            # Convert.c files into .cpp
-            line = line.replace('.c', '.cpp')
-
-            converted.append("#include \"%s\"\n" % line)
+            # Ignore .c files. You can't / shouldn't include them in C++.
+            if '.c' not in line:
+                converted.append("#include \"%s\"\n" % line)
 
         for line in self.globalIncludes:
             converted.append(line)
