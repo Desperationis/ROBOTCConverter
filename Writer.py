@@ -1,4 +1,6 @@
+from PythonFileLibrary.HelperFunctions import *
 import os
+
 """
     Writer.py
 
@@ -12,24 +14,20 @@ class Writer:
     def WriteFile(self, fileConverter):
         # Step 1: Get file name and type from directory.
         directory = fileConverter.fileName
-        fileName = directory.split('\\')[-1] # Includes '.xxx'
-        fileType = fileName.split('.')[-1]
-        fileName = directory.split('\\')[-1].split('.')[0] # Doesn't includes '.xxx'
+        fileName = os.path.basename(directory)
+        fileType = os.path.splitext(directory)[-1]
 
         # Step 2: Convert any .c files into .cpp
-        if fileType == 'c':
-            fileType = 'cpp'
-        fileName += '.' + fileType
+        if '.c'== fileType:
+            fileName = fileName.replace('.c', '.cpp')
 
         # Step 3: If the file is 'main.cpp', change it to 'Program.h'
+        # This is done so RobotCSimulator's main.cpp gets run.
         if 'main.cpp' == fileName:
             fileName = 'Program.h'
 
         # Step 4: Write the contents of fileConverter into output folder.
-        outputFile = open(os.path.join(self.outputFolder, fileName), 'w+')
+        outputFile = OpenFileSafely(os.path.join(self.outputFolder, fileName), 'w+', False)
+        outputFile.writelines(fileConverter.convertedFile)
 
-        for line in fileConverter.convertedFile:
-            outputFile.write(line)
-
-
-        print(fileName)
+        print("Writer.py: Converted \"%s\" in %s" % (fileName, self.outputFolder))

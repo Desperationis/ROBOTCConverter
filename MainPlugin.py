@@ -11,7 +11,7 @@ class MainPlugin(Plugin):
 
     def Convert(self):
         # Edit the reader's cached file directly, and replace
-        # 'main' with 'programMain'
+        # 'task main' with 'task programMain'
         for index, line in enumerate(self.reader.lines):
             if 'task' in line and 'main' in line:
                 self.reader.lines[index] = line.replace('main', "programMain")

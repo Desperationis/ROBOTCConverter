@@ -9,7 +9,11 @@ class Plugin:
         # A Reader.py class to read the file.
         self.reader = reader
 
-    # Returns a list of strings representing lines
-    # to be appended to the file.
-    def Convert():
+    # Resets the reader before converting the file.
+    def WrappedConvert(self):
+        self.reader.ResetReader()
+        return self.Convert()
+
+    # Returns a list of strings representing lines to be appended to the file.
+    def Convert(self):
         return []

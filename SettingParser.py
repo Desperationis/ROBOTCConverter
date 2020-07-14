@@ -37,11 +37,11 @@ class SettingParser(PythonFileLibrary.SettingParser.SettingParser):
                 self.outputFolder = self.GetNextLine().strip()
 
             if currentSetting == 2:
-                while not self.ReachedEnd():
+
+                # Copies each line after "> Global Includes" until '*end'
+                currentLine = self.GetNextLine()
+                while not self.ReachedEnd() and '*end' not in currentLine:
+                    self.globalIncludes.append(currentLine)
                     currentLine = self.GetNextLine()
-                    if '*end' not in currentLine:
-                        self.globalIncludes.append(currentLine)
-                    else:
-                        break
 
         self.ResetReader()

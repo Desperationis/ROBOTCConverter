@@ -23,7 +23,6 @@ class ConfigPlugin(Plugin):
     # Get the arguments passed into all '#pragma config()'s
     # as a list of lists.
     def GetArguments(self):
-        # Get all config() arguments as a list of lists
         arguments = []
         for pragma in self.GetConfigLines():
             pragma = RemoveElements(pragma, ['#pragma', '(', ')', 'config', ' '])
@@ -36,7 +35,6 @@ class ConfigPlugin(Plugin):
     def Convert(self):
         convertedFile = []
 
-
         # Step 1: Turn motor and sensor ports into variables.
         configArguments = self.GetArguments()
         for arguments in configArguments:
@@ -46,7 +44,7 @@ class ConfigPlugin(Plugin):
             convertedFile.append("%sPort %s;\n" % (type, name))
 
 
-        #Step 2: Use Cortex::config() to configure the ports.
+        # Step 2: Use Cortex::config() to configure the ports.
         configFunctions = ""
         for arg in configArguments:
             type, port, name = arg[0], arg[1], arg[2]
@@ -57,6 +55,7 @@ class ConfigPlugin(Plugin):
             else:
                 configFunctions += "\tCortex::config(\"%s\", %s, %s);\n" % (name, name, port)
 
+        # Step 3: Write it down onto the list.
         setUp = [
         "void SetUp() {\n"
         "%s" % (configFunctions),

@@ -1,16 +1,24 @@
+import os
 from Plugin import *
 from PythonFileLibrary.HelperFunctions import *
 
+"""
+    IncludePlugin.py
+
+    Includes global headers into each file, as well as
+    make their '#include's relative to the directory of RobotCSimulator.
+"""
 class IncludePlugin(Plugin):
     def __init__(self, reader):
         super().__init__(reader)
         self.globalIncludes = []
 
+    # Sets an array of strings as a list of '#include's
     def SetGlobalIncludes(self, includes):
         self.globalIncludes = includes
 
+    # Only get lines with '#include'
     def GetIncludes(self):
-        self.reader.ResetReader()
         for line in self.reader.CleanRead():
             if '#include' in line:
                 yield line.strip('\n')
@@ -20,18 +28,23 @@ class IncludePlugin(Plugin):
     def Convert(self):
         converted = []
 
+        # In RobotCSimulator, all files are located in a single folder.
+        # This will convert all '#include's to only include header files and
+        # strip away relative folder includes.
         for line in self.GetIncludes():
-            # Get the directory of the file.
+            # Get the relative directory of the file.
             line = RemoveElements(line, ['#include', ' ', '\"'])
 
-            # Only get the file name of the directory.
-            line = line.split("/")[-1]
+            # Get the file name and type of each directory.
+            line = os.path.basename(line)
+            type = os.path.splitext(line)[-1]
 
             # Ignore .c files. You can't / shouldn't include them in C++.
-            if '.c' not in line:
+            # Use headers instead!
+            if type != '.c':
                 converted.append("#include \"%s\"\n" % line)
 
-        for line in self.globalIncludes:
-            converted.append(line)
+        # Include global includes last
+        converted.extend(self.globalIncludes)
 
         return converted
