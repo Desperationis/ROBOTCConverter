@@ -19,6 +19,13 @@ class FileConverter(Reader):
     def AddPlugin(self, plugin):
         self.plugins.append(plugin(self))
 
+    def AccessPlugin(self, pluginType):
+        for plugin in self.plugins:
+            if type(plugin) == pluginType:
+                return plugin
+
+        return None
+
     # Converts the file by merging the results of plugins.
     def Convert(self):
         assert self.canParse, "FileConverter.py: Could not read \"%s\"" % (self.fileName)

@@ -3,8 +3,7 @@ from Plugin import *
 """
     CopyPlugin.py
 
-    A plugin that deals with copying content without conversion.
-
+    A plugin that deals with copying content.
 """
 class CopyPlugin(Plugin):
     def __init__(self, reader):
@@ -14,6 +13,10 @@ class CopyPlugin(Plugin):
         # Copy the entire file from the current file position.
         converted = []
         for line in self.reader.CleanRead():
-            converted.append(line)
+
+            # Skip #pragma's and #include's. They are never guaranteed to work.
+            if '#pragma' not in line and '#include' not in line:
+                converted.append(line)
+
 
         return converted

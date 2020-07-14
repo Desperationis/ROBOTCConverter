@@ -15,6 +15,9 @@ class SettingParser(PythonFileLibrary.SettingParser.SettingParser):
         # The directory of the output folder.
         self.outputFolder = ""
 
+        # Global #include's !
+        self.globalIncludes = []
+
         try:
             self.Parse()
         except AssertionError as error:
@@ -32,5 +35,13 @@ class SettingParser(PythonFileLibrary.SettingParser.SettingParser):
             if currentSetting == 1:
                 self.inputFolder = self.GetNextLine().strip()
                 self.outputFolder = self.GetNextLine().strip()
+
+            if currentSetting == 2:
+                while not self.ReachedEnd():
+                    currentLine = self.GetNextLine()
+                    if '*end' not in currentLine:
+                        self.globalIncludes.append(self.GetNextLine())
+                    else:
+                        break
 
         self.ResetReader()

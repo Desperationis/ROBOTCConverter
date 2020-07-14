@@ -64,11 +64,4 @@ class ConfigPlugin(Plugin):
         ]
         convertedFile.extend(setUp)
 
-        # Step 3: Make the next plugin ignore pragmas.
-        # (RobotC forces you to put #pragma at the very top of a file)
-        lastLine = -1
-        for line in self.GetConfigLines():
-            lastLine = self.reader.currentLine
-        self.reader.currentLine = lastLine + 1
-
         return convertedFile
