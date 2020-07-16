@@ -15,47 +15,55 @@ class TaskPlugin(Plugin):
             if 'while' in line:
                 yield [index, line]
 
+    # Given a line, checks if each '(' and ')' are paired.
+    def ParenthesisCheck(self, line):
+        depth = 0
+        for char in line:
+            depth += char == '('
+            depth -= char == ')'
+
+        return depth == 0
+
+
     # Given a line, get a string representing the
-    # inside of anything between '()'
+    # contents of anything between root '()' nodes.
     def GetConditions(self, index, line):
         conditions = ""
         depth = 0
-        collect = False
         for char in line:
-            if char == ')':
-                depth -= 1
+            # If ')' is found, decrease depth
+            depth -= char == ')'
 
-                if depth == 0:
-                    collect = False
+            collect = depth != 0
+
+            # If '(' is found, increase depth
+            depth += char == '('
 
             if collect:
                 conditions += char
 
-            if char == '(':
-                depth += 1
-                collect = True
+        return conditions
 
-        if collect:
-            print('TaskPlugin.py: Had trouble reading line %s of %s.' % (index, self.reader.fileName))
-            return ''
-        else:
-            return conditions
-
-    # Given a string of conditions replace them with anything inside
-    # line's ()
+    # Given a string of conditions, replace them with anything inside
+    # a line's '()' parent nodes
     def ReplaceConditions(self, line, conditions):
         newLine = ""
-        collect = True
+        depth = 0
         for char in line:
-            if char == ')':
-                collect = True
+
+            # If ')' is found, decrease depth
+            depth -= char == ')'
+
+            collect = depth == 0
+
+            # If '(' is found, increase depth
+            depth += char == '('
 
             if collect:
                 newLine += char
 
-            if char == '(':
+            elif conditions not in newLine:
                 newLine += conditions
-                collect = False
 
         return newLine
 
@@ -65,14 +73,13 @@ class TaskPlugin(Plugin):
         # inserted in its while loop to allow it to exit
         # at any time.
         for index, line in self.GetLoops():
-            conditions = self.GetConditions(index, line)
+            if self.ParenthesisCheck(line):
+                conditions = '(' + self.GetConditions(index, line) + ") && !killAll"
 
-            if conditions != '':
-                conditions += " && TASKTRUE"
+                self.reader.lines[index] = self.ReplaceConditions(line, conditions)
 
-            self.reader.lines[index] = self.ReplaceConditions(line, conditions)
-
-
+            else:
+                print('TaskPlugin.py: Had trouble reading line %s of %s.' % (index, self.reader.fileName))
 
 
         return []
