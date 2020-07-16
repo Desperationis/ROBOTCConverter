@@ -5,6 +5,7 @@ from ConfigPlugin import *
 from MainPlugin import *
 from CopyPlugin import *
 from IncludePlugin import *
+from TaskPlugin import *
 from PythonFileLibrary.RecursiveScanner import *
 
 
@@ -20,6 +21,8 @@ for file in recursiveScanner.files:
     includePlugin = fileConverter.AddPlugin(IncludePlugin)
     includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
 
+    # Make all tasks exitable.
+    fileConverter.AddPlugin(TaskPlugin)
 
     if 'main.c' in file:
         # Only main.c has a task main() and the configuration for the motors and sensors.
