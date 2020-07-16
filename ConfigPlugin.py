@@ -51,9 +51,9 @@ class ConfigPlugin(Plugin):
 
             if type == "Motor":
                 reversed = arg[-1] == 'reversed'
-                configFunctions += "\tCortex::config(\"%s\", %s, %s, %s);\n" % (name, name, port, str(reversed).lower())
+                configFunctions += "\tconfig(\"%s\", %s, %s, %s);\n" % (name, name, port, str(reversed).lower())
             else:
-                configFunctions += "\tCortex::config(\"%s\", %s, %s);\n" % (name, name, port)
+                configFunctions += "\tconfig(\"%s\", %s, %s);\n" % (name, name, port)
 
         # Step 3: Write it down onto the list.
         setUp = [
