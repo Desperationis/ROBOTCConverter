@@ -1,10 +1,11 @@
 > Input / Output Folders
-C:\Users\smart\Desktop\RobotCLibrary_2
+C:\Users\smart\Desktop\RobotCLibrary
 C:\Users\smart\Desktop\RobotCSimulator\RobotCProgram
 
 > Global Includes
 #include "../RobotC.h"
 #include "../stdafx.h"
+#include "Externs.h"
 using namespace RobotC::Types;
 using namespace RobotC::Threads;
 using namespace RobotC::Types;

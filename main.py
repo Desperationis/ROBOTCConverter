@@ -6,6 +6,7 @@ from MainPlugin import *
 from CopyPlugin import *
 from IncludePlugin import *
 from TaskPlugin import *
+from ExternPlugin import *
 from PythonFileLibrary.RecursiveScanner import *
 
 
@@ -20,6 +21,8 @@ for file in recursiveScanner.files:
     # Convert the '#include's as well as add the global includes.
     includePlugin = fileConverter.AddPlugin(IncludePlugin)
     includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
+
+    fileConverter.AddPlugin(ExternPlugin)
 
     # Make all tasks exitable.
     fileConverter.AddPlugin(TaskPlugin)
@@ -37,3 +40,16 @@ for file in recursiveScanner.files:
     fileConverter.Convert()
 
     writer.WriteFile(fileConverter)
+
+file = open(os.path.join(settingParser.outputFolder, "Externs.h"), "w+")
+file.write("#pragma once\n")
+
+globalIncludes = settingParser.globalIncludes
+for include in globalIncludes:
+    if 'Externs.h' in include:
+        globalIncludes.remove(include)
+        break
+
+file.writelines(settingParser.globalIncludes);
+file.write("\n\n");
+file.writelines(ExternPlugin.variables);
