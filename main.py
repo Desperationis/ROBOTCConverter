@@ -46,7 +46,7 @@ file.write("#pragma once\n")
 
 globalIncludes = settingParser.globalIncludes
 for include in globalIncludes:
-    if 'Externs.h' in include:
+    if os.path.basename(file.name) in include:
         globalIncludes.remove(include)
         break
 
