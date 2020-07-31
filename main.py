@@ -36,7 +36,7 @@ for file in recursiveScanner.files:
     fileConverter.AddPlugin(CopyPlugin)
 
     # Extern all global variables.
-    fileConverter.AddPlugin(ExternPlugin, [fileConverter.convertedFile])
+    fileConverter.AddPlugin(ExternPlugin)
 
     # Compile all plugins to an array of strings.
     fileConverter.Convert()
