@@ -12,5 +12,7 @@ robotCTypes = [
     "tSensors ",
     "unsigned ",
     "ubyte ",
-    "long"
+    "long",
+    "MotorPort",
+    "SensorPort"
 ]

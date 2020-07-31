@@ -17,8 +17,8 @@ class FileConverter(Reader):
 
     # Adds a plugin. "plugin" should be passed by type.
     # Returns a reference to the plugin.
-    def AddPlugin(self, plugin):
-        plugin = plugin(self)
+    def AddPlugin(self, plugin, args = []):
+        plugin = plugin(self, *args)
         self.plugins.append(plugin)
 
         return plugin

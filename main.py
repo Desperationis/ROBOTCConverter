@@ -22,7 +22,6 @@ for file in recursiveScanner.files:
     includePlugin = fileConverter.AddPlugin(IncludePlugin)
     includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
 
-    fileConverter.AddPlugin(ExternPlugin)
 
     # Make all tasks exitable.
     fileConverter.AddPlugin(TaskPlugin)
@@ -35,6 +34,9 @@ for file in recursiveScanner.files:
 
     # Copy the rest of the file.
     fileConverter.AddPlugin(CopyPlugin)
+
+    # Extern all global variables.
+    fileConverter.AddPlugin(ExternPlugin, [fileConverter.convertedFile])
 
     # Compile all plugins to an array of strings.
     fileConverter.Convert()
