@@ -6,7 +6,6 @@ from MainPlugin import *
 from CopyPlugin import *
 from IncludePlugin import *
 from TaskPlugin import *
-from ExternPlugin import *
 from PythonFileLibrary.RecursiveScanner import *
 
 
@@ -35,24 +34,7 @@ for file in recursiveScanner.files:
     # Copy the rest of the file.
     fileConverter.AddPlugin(CopyPlugin)
 
-    # Extern all global variables.
-    fileConverter.AddPlugin(ExternPlugin)
-
     # Compile all plugins to an array of strings.
     fileConverter.Convert()
 
     writer.WriteFile(fileConverter)
-
-# Write down Extern.h. This is an added file for declaring externs.
-file = open(os.path.join(settingParser.outputFolder, "Externs.h"), "w+")
-file.write("#pragma once\n")
-
-globalIncludes = settingParser.globalIncludes
-for include in globalIncludes:
-    if os.path.basename(file.name) in include:
-        globalIncludes.remove(include)
-        break
-
-file.writelines(settingParser.globalIncludes);
-file.write("\n\n");
-file.writelines(ExternPlugin.variables);
