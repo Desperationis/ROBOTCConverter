@@ -13,6 +13,8 @@ settingParser = SettingParser()
 recursiveScanner = RecursiveScanner(settingParser.inputFolder, ['.c', '.h'])
 writer = Writer(settingParser.outputFolder)
 
+settingParser.globalIncludes.append("#include \"Externs.h\"\n")
+
 for file in recursiveScanner.files:
 
     fileConverter = FileConverter(file)
@@ -30,7 +32,6 @@ for file in recursiveScanner.files:
         fileConverter.AddPlugin(ConfigPlugin)
         fileConverter.AddPlugin(MainPlugin)
 
-
     # Copy the rest of the file.
     fileConverter.AddPlugin(CopyPlugin)
 
@@ -38,3 +39,17 @@ for file in recursiveScanner.files:
     fileConverter.Convert()
 
     writer.WriteFile(fileConverter)
+
+
+
+    # Turn motor and sensor ports into externs.
+    if 'main.c' in file:
+        ports = []
+        for line in fileConverter.convertedFile:
+            if 'MotorPort ' in line or 'SensorPort ' in line:
+                ports.append('extern ' + line)
+
+        outputFile = OpenFileSafely(os.path.join(settingParser.outputFolder, "Externs.h"), "w+", True)
+        settingParser.globalIncludes.remove("#include \"Externs.h\"\n")
+        outputFile.writelines(settingParser.globalIncludes)
+        outputFile.writelines(ports)
