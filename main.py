@@ -41,6 +41,7 @@ for file in recursiveScanner.files:
 
     writer.WriteFile(fileConverter)
 
+# Write down Extern.h. This is an added file for declaring externs.
 file = open(os.path.join(settingParser.outputFolder, "Externs.h"), "w+")
 file.write("#pragma once\n")
 
