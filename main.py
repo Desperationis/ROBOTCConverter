@@ -13,9 +13,19 @@ from PythonFileLibrary.RecursiveScanner import *
 settingParser = SettingParser()
 recursiveScanner = RecursiveScanner(settingParser.inputFolder, ['.c', '.h'])
 writer = Writer(settingParser.outputFolder)
-globalVariableTracker = GlobalVariableTracker(settingParser.outputFolder, settingParser.globalIncludes)
 
-settingParser.globalIncludes.append("#include \"Externs.h\"\n")
+globalIncludes = []
+globalIncludes.append("#include \"../RobotC.h\"\n")
+globalIncludes.append("#include \"../stdafx.h\"\n")
+globalIncludes.append("using namespace RobotC::Types;\n")
+globalIncludes.append("using namespace RobotC::Threads;\n")
+globalIncludes.append("using namespace RobotC::Types;\n")
+globalIncludes.append("using namespace RobotC::Peripherals;\n")
+globalIncludes.append("using namespace RobotC::Functions;\n")
+
+globalVariableTracker = GlobalVariableTracker(settingParser.outputFolder, globalIncludes)
+
+globalIncludes.append("#include \"Externs.h\"\n")
 
 for file in recursiveScanner.files:
 
@@ -23,7 +33,7 @@ for file in recursiveScanner.files:
 
     # Convert the '#include's as well as add the global includes.
     includePlugin = fileConverter.AddPlugin(IncludePlugin)
-    includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
+    includePlugin.SetGlobalIncludes(globalIncludes)
 
     # Make all tasks exitable.
     fileConverter.AddPlugin(TaskPlugin)
