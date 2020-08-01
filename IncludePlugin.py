@@ -21,7 +21,7 @@ class IncludePlugin(Plugin):
     def GetIncludes(self):
         self.reader.ResetReader()
         for line in self.reader.CleanRead():
-            if '#include' in line:
+            if '#include' in line and line[0] in '#':
                 yield line.strip('\n')
 
         self.reader.ResetReader()

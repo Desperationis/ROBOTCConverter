@@ -2,6 +2,12 @@ from PythonFileLibrary.HelperFunctions import *
 from RobotCTypes import *
 import os
 
+"""
+    GlobalVariableTracker.py
+
+    Tracks down global variables and writes a file with
+    externs to them.
+"""
 class GlobalVariableTracker:
 
     def __init__(self, outputDirectory, globalIncludes):

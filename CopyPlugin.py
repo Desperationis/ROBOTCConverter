@@ -27,7 +27,7 @@ class CopyPlugin(Plugin):
             # Skip #pragma's and #include's. RobotC and RobotCSimulator
             # are completely different preprocessor-wise. These can be converted
             # with ConfigPlugin.py and IncludePlugin.py, respectively.
-            if '#pragma' not in line and '#include' not in line:
+            if '#pragma' not in line and '#include' not in line and '#error' not in line:
                 converted.append(line)
 
 
