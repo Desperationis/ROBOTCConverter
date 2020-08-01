@@ -57,7 +57,7 @@ class ConfigPlugin(Plugin):
 
         # Step 3: Write it down onto the list.
         setUp = [
-        "void SetUpConfig() {\n"
+        "void SetUpConfig() {\n",
         "%s" % (configFunctions),
         "};"
         ]
