@@ -1,66 +1,31 @@
-# RobotCConverter (WIP)
-RobotCConveter is a script designed to run RobotC code in RobotCSimulator.
+# RobotCConverter 
+RobotCConverter is a file parser meant to convert code written in RobotC into RobotCSimulator code. 
 
-## How does it work?
-RobotCConverter acts as a linker by including the right include directories neccesary for each header and source file in a RobotC library. It also automatically detects and converts `#pragma config` sensors / motors into variables for RobotCSimulator to run.
-
-## How to use it
-To use RobotCConverter, you have to edit `setup.txt` to declare the following:
-
+## Setting it up
+The only parameters necessary to use this converter is to specify the directory of the files you want to scan, as well as the output directory, which would be wherever `RobotCSimulator/RobotCProgram` is located in inside your computer. Both of these requirements are found in `setup.txt`. Here's an example:
 
     > Input / Output Folders
-    [Library Directory]
-    [\Program Directory of RobotCSimulator]
+    C:\Users\smart\Desktop\RobotCLibrary
+    C:\Users\smart\Desktop\RobotCSimulator\RobotCProgram
+   
+## Caveats
 
-    > Main File
-    main.c
-    Program.h
-    [Includes]
-    *end
-    
-    # OPTIONAL ---------------
-    > Header File
-    [Input Relative Directory]
-    [Output Relative Directory]
-    [Includes]
-    *end
-
-    > Source File
-    [Input Relative Directory]
-    [Output Relative Directory]
-    [Includes]
-    *end
-
-Here's a short example:
-
-    > Input / Output Folders
-    C:\Users\user\Desktop\RobotCLibrary
-    C:\Users\user\Desktop\RobotCSimulator\RobotCSimulator\Source\ROBOTC\Program
-
-    > Main File
-    main.c
-    Program.h
-    #include "../ROBOTCtoC++/RobotC.h"
-    #include "Controllers.h"
-    #include "Globals.h"
-    #include "Helpers.h"
-    #include "Slew.h"
-    #include "PID.h"
-    #include "Setup.h"
-    #include <iostream>
-    *end
-
-    > Header File
-    Setup/Setup.h
-    Setup.h
-    *end
-
-
-    > Source File
-    Helpers/Helpers.c
-    Helpers.cpp
-    #include "../ROBOTCtoC++/RobotC.h"
-    #include "Globals.h"
-    #include "Helpers.h"
-    #include <iostream>
-    *end
+This converter was made with the intent of converting RobotCLibrary code into RobotCSimaultor. As such, RobotCConverter / RobotCSimulator does not support the following RobotC functionalities:
+* Automatic function capitalization.
+* Automatic semicolon insertion.
+* `#include` of files not in the same root directory (could be in folders).
+* `while` loops with conditions spanning more than one line.
+* Integrated Functions other than:
+  * `startTask()`
+  * `stopAllTasks()`
+  * `delay()`
+  * All `Math` commands.
+* Integrated Variables other than:
+  * `motor[]`
+  * `SensorValue[]`
+  * `vexRT[]`
+  
+  Using RobotCSimulator and RobotCConverter assumes you are making a program / library that:
+   * Uses raw `motor[], SensorValue[], vexRT[]` values.
+   * Could possibly be multi-tasked.
+   * Could include other files.
