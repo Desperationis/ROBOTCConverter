@@ -14,7 +14,6 @@ class GlobalVariableTracker:
         for line in fileConverter.convertedFile:
 
             if ';' in line and line[0] not in '\t ':
-                print(line)
 
                 if '=' in line:
                     line = line[:line.index("=")] + ";"

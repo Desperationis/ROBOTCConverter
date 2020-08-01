@@ -25,7 +25,6 @@ for file in recursiveScanner.files:
     includePlugin = fileConverter.AddPlugin(IncludePlugin)
     includePlugin.SetGlobalIncludes(settingParser.globalIncludes)
 
-
     # Make all tasks exitable.
     fileConverter.AddPlugin(TaskPlugin)
 

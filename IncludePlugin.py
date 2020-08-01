@@ -19,6 +19,7 @@ class IncludePlugin(Plugin):
 
     # Only get lines with '#include'
     def GetIncludes(self):
+        self.reader.ResetReader()
         for line in self.reader.CleanRead():
             if '#include' in line:
                 yield line.strip('\n')
@@ -43,6 +44,8 @@ class IncludePlugin(Plugin):
             # Use headers instead!
             if type != '.c':
                 converted.append("#include \"%s\"\n" % line)
+            else:
+                print("IncludePlugin: \"%s\" was skipped in %s as it\'s a .cpp file." % (line, self.reader.fileName))
 
         # Include global includes last
         converted.extend(self.globalIncludes)
