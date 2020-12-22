@@ -10,7 +10,7 @@ The only parameters necessary to use this converter is to specify the directory 
    
 ## Caveats
 
-This converter was made with the intent of converting RobotCLibrary code into RobotCSimaultor. As such, RobotCConverter / RobotCSimulator does not support the following RobotC functionalities:
+This converter was made with the intent of converting RobotCLibrary code into RobotCSimulator. As such, RobotCConverter / RobotCSimulator does not support the following RobotC functionalities:
 * Automatic function capitalization.
 * Automatic semicolon insertion.
 * `#include` of files not in the same root directory (could be in folders).
